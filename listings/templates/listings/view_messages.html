@@ -1,0 +1,9 @@
+{% extends "listings/base.html" %}
+{% block content %}
+{% for message in messages %}
+    <div>
+        <p><strong>From:</strong> {{ message.sender.username }}</p>
+        <p><strong>Content:</strong> {{ message.content }}</p>
+    </div>
+{% endfor %}
+{% endblock %}

@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db.models import Q
-from .forms import UserRegisterForm, ListingForm, ListingImageForm
-from .models import Listing, ListingImage
+from .models import Profile, Listing, ListingImage, Message
+from .forms import UserRegisterForm, ListingForm, ListingImageForm, MessageForm
 
 def register(request):
     if request.method == 'POST':
@@ -40,7 +40,6 @@ def listing_list(request):
 
     return render(request, 'listings/listing_list.html', {'listings': listings})
 
-
 def listing_detail(request, id):
     listing = Listing.objects.get(id=id)
     return render(request, 'listings/listing_detail.html', {'listing': listing})
@@ -60,3 +59,22 @@ def add_listing(request):
         listing_form = ListingForm()
         image_form = ListingImageForm()
     return render(request, 'listings/add_listing.html', {'listing_form': listing_form, 'image_form': image_form})
+
+#<- Messaging -->
+def send_message(request, listing_id, receiver_id):
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = request.user
+            message.receiver = User.objects.get(pk=receiver_id)
+            message.listing = Listing.objects.get(pk=listing_id)
+            message.save()
+            return redirect('messages')
+    else:
+        form = MessageForm()
+    return render(request, 'listings/send_message.html', {'form': form})
+
+def view_messages(request):
+    messages = Message.objects.filter(receiver=request.user)
+    return render(request, 'listings/view_messages.html', {'messages': messages})
