@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, redirect
-from .models import Profile, Listing, ListingImage, Message
+from .models import Profile, Listing, ListingImage, Message, SavedListing
 from .forms import UserRegisterForm, ListingForm, ListingImageForm, MessageForm
 
 def register(request):
@@ -62,6 +62,20 @@ def add_listing(request):
         image_form = ListingImageForm()
     return render(request, 'listings/add_listing.html', {'listing_form': listing_form, 'image_form': image_form})
 
+def save_listing(request, listing_id):
+    if request.method == 'POST':
+        listing = Listing.objects.get(pk=listing_id)
+        saved_listing, created = SavedListing.objects.get_or_create(user=request.user, listing=listing)
+        if created:
+            return redirect('listing_detail', listing_id=listing_id)
+        else:
+            return redirect('listing_list')  # Or wherever you want to redirect if listing is already saved
+    else:
+        return redirect('listing_list')  # Redirect to listing list if saving is not through POST request
+
+def view_saved_listings(request):
+    saved_listings = SavedListing.objects.filter(user=request.user)
+    return render(request, 'listings/view_saved_listings.html', {'saved_listings': saved_listings})
 #<- Messaging -->
 def send_message(request, listing_id, receiver_id):
     if request.method == 'POST':
