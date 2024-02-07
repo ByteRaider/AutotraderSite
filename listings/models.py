@@ -7,6 +7,7 @@ class Profile(models.Model):
     def __str__(self):
         return f'{self.user.username} Profile'
 
+# listings
 class Listing(models.Model):
     seller = models.ForeignKey(User, related_name='listings', on_delete=models.CASCADE)
     make = models.CharField(max_length=255)
@@ -35,8 +36,17 @@ class SavedListing(models.Model):
     def __str__(self):
         return f'{self.user.username} saved {self.listing}'    
     
+# LIKES
+class ListingLike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
+    liked_at = models.DateTimeField(auto_now_add=True)
 
-# Begin Messaging Models -- Maybe an app later?
+    class Meta:
+        unique_together = ('user', 'listing')
+
+
+#  Messaging  -- Maybe an app later?
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
@@ -47,3 +57,4 @@ class Message(models.Model):
 
     def __str__(self):
         return f'Message from {self.sender} to {self.receiver} - {self.created_at}'
+

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, redirect
-from .models import Profile, Listing, ListingImage, Message, SavedListing
+from .models import Profile, Listing, ListingImage, Message, SavedListing, ListingLike
 from .forms import UserRegisterForm, ListingForm, ListingImageForm, MessageForm
 
 def register(request):
@@ -77,6 +77,11 @@ def view_saved_listings(request):
     saved_listings = SavedListing.objects.filter(user=request.user)
     return render(request, 'listings/view_saved_listings.html', {'saved_listings': saved_listings})
 
+def remove_saved_listing(request, listing_id):
+    SavedListing.objects.filter(user=request.user, listing_id=listing_id).delete()
+    messages.success(request, 'Listing removed from saved listings.')
+    return redirect('view_saved_listings')
+
 #<- Messaging -->
 def send_message(request, listing_id, receiver_id):
     if request.method == 'POST':
@@ -98,3 +103,14 @@ def view_messages(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'listings/view_messages.html', {'page_obj': page_obj})
+
+# <!  LIKEs -->
+def like_listing(request, listing_id):
+    listing, created = ListingLike.objects.get_or_create(user=request.user, listing_id=listing_id)
+    if created:
+        messages.success(request, 'Listing liked.')
+    else:
+        messages.info(request, 'You already like this listing.')
+    return redirect('listing_detail', listing_id=listing_id)
+
+

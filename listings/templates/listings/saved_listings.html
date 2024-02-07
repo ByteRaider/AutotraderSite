@@ -1,10 +1,18 @@
 <!-- saved_listings.html -->
 {% extends "listings/base.html" %}
 {% block content %}
-<h2>Your Saved Listings</h2>
-<ul>
-    {% for saved_listing in saved_listings %}
-        <li><a href="{% url 'listing_detail' saved_listing.listing.id %}">{{ saved_listing.listing.title }}</a></li>
-    {% endfor %}
-</ul>
+
+
+
+{% for saved_listing in saved_listings %}
+    <li>
+        <a href="{% url 'listing_detail' saved_listing.listing.id %}">
+            {{ saved_listing.listing.make }} {{ saved_listing.listing.model }} - ${{ saved_listing.listing.price }}
+        </a>
+        <a href="{% url 'remove_saved_listing' saved_listing.listing.id %}">Remove</a>
+        <a href="{% url 'like_listing' saved_listing.listing.id %}">Like</a>
+    </li>
+{% endfor %}
+
+
 {% endblock %}
