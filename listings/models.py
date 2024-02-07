@@ -25,6 +25,17 @@ class ListingImage(models.Model):
     def __str__(self):
         return f'Image for {self.listing.make} {self.listing.model} - {self.listing.year}'
 
+class SavedListing(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
+    saved_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'listing')
+    def __str__(self):
+        return f'{self.user.username} saved {self.listing}'    
+    
+
 # Begin Messaging Models -- Maybe an app later?
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
