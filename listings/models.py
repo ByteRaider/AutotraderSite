@@ -7,7 +7,6 @@ class Profile(models.Model):
     def __str__(self):
         return f'{self.user.username} Profile'
 
-
 class Listing(models.Model):
     seller = models.ForeignKey(User, related_name='listings', on_delete=models.CASCADE)
     make = models.CharField(max_length=255)
@@ -25,3 +24,14 @@ class ListingImage(models.Model):
     
     def __str__(self):
         return f'Image for {self.listing.make} {self.listing.model} - {self.listing.year}'
+
+# Begin Messaging Models -- Maybe an app later?
+class Message(models.Model):
+    sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
+    listing = models.ForeignKey('Listing', on_delete=models.CASCADE, null=True, blank=True)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Message from {self.sender} to {self.receiver} - {self.created_at}'
