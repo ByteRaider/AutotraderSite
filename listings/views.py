@@ -1,6 +1,8 @@
-from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 from django.db.models import Q
+from django.shortcuts import render, redirect
 from .models import Profile, Listing, ListingImage, Message
 from .forms import UserRegisterForm, ListingForm, ListingImageForm, MessageForm
 
@@ -76,5 +78,8 @@ def send_message(request, listing_id, receiver_id):
     return render(request, 'listings/send_message.html', {'form': form})
 
 def view_messages(request):
-    messages = Message.objects.filter(receiver=request.user)
-    return render(request, 'listings/view_messages.html', {'messages': messages})
+    message_list = Message.objects.filter(receiver=request.user).order_by('-created_at')
+    paginator = Paginator(message_list, 10)  # Show 10 messages per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'listings/view_messages.html', {'page_obj': page_obj})
