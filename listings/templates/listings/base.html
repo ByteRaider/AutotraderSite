@@ -20,8 +20,19 @@
 
     </head>
 <body>
+    <!-- In base.html or a template included in all pages -->
+{% if user.is_authenticated %}
+{% with request.user.received_messages.filter(is_read=False).count as unread_messages_count %}
+    {% if unread_messages_count %}
+        <div>You have {{ unread_messages_count }} new message(s).</div>
+    {% endif %}
+{% endwith %}
+{% endif %}
+<!-- End of Message notification -->
+
     {% block content %}
     {% endblock %}
+    
 </body>
 
 </html>
