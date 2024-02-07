@@ -19,3 +19,9 @@ class Listing(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     VIN = models.CharField(max_length=255)
     
+class ListingImage(models.Model):
+    listing = models.ForeignKey(Listing, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='listing_images/')
+    
+    def __str__(self):
+        return f'Image for {self.listing.make} {self.listing.model} - {self.listing.year}'
