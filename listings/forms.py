@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Profile, Listing
+from .models import Profile, Listing, ListingImage
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -22,3 +22,9 @@ class SearchForm(forms.Form):
     year = forms.IntegerField(required=False)
     min_price = forms.DecimalField(required=False)
     max_price = forms.DecimalField(required=False)
+
+class ListingImageForm(forms.ModelForm):
+    class Meta:
+        model = ListingImage
+        fields = ['image']
+        #widgets = {'image': forms.ClearableFileInput(attrs={'multiple': True})}

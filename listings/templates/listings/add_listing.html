@@ -1,9 +1,10 @@
 {% extends "listings/base.html" %}
 {% block content %}
-    <h2>Add Listing</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Add Listing</button>
-    </form>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ listing_form.as_p }}
+    <!-- Note: The name attribute 'image' should match the one used in request.FILES.getlist('image') -->
+    <input type="file" name="image" multiple>
+    <button type="submit">Add Listing</button>
+</form>
 {% endblock %}

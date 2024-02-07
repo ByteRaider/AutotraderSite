@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db.models import Q
-from .forms import UserRegisterForm, ListingForm
-from .models import Listing
+from .forms import UserRegisterForm, ListingForm, ListingImageForm
+from .models import Listing, ListingImage
 
 def register(request):
     if request.method == 'POST':
@@ -47,12 +47,16 @@ def listing_detail(request, id):
 
 def add_listing(request):
     if request.method == 'POST':
-        form = ListingForm(request.POST)
-        if form.is_valid():
-            listing = form.save(commit=False)
+        listing_form = ListingForm(request.POST, request.FILES)
+        files = request.FILES.getlist('image')  # Handle multiple file uploads
+        if listing_form.is_valid():
+            listing = listing_form.save(commit=False)
             listing.seller = request.user
             listing.save()
+            for f in files:
+                ListingImage.objects.create(listing=listing, image=f)
             return redirect('listing_list')
     else:
-        form = ListingForm()
-    return render(request, 'listings/add_listing.html', {'form': form})
+        listing_form = ListingForm()
+        image_form = ListingImageForm()
+    return render(request, 'listings/add_listing.html', {'listing_form': listing_form, 'image_form': image_form})
