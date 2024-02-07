@@ -76,6 +76,7 @@ def save_listing(request, listing_id):
 def view_saved_listings(request):
     saved_listings = SavedListing.objects.filter(user=request.user)
     return render(request, 'listings/view_saved_listings.html', {'saved_listings': saved_listings})
+
 #<- Messaging -->
 def send_message(request, listing_id, receiver_id):
     if request.method == 'POST':
