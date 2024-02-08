@@ -21,9 +21,11 @@ from listings import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('listings/', include('listings.urls')),
-
+    path('home/', include('listings.urls')), 
+    path('', include('listings.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
+
 
 urlpatterns += [
     # ...

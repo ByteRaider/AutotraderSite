@@ -1,10 +1,20 @@
 {% extends "listings/base.html" %}
+{% load widget_tweaks %}
 {% block content %}
-<form method="post" enctype="multipart/form-data">
+
+<!-- add_listing.html -->
+<form method="post" enctype="multipart/form-data" class="p-3">
     {% csrf_token %}
-    {{ listing_form.as_p }}
-    <!-- Note: The name attribute 'image' should match the one used in request.FILES.getlist('image') -->
-    <input type="file" name="image" multiple>
-    <button type="submit">Add Listing</button>
-</form>
+    {% for field in listing_form %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field|add_class:"form-control" }}
+        {% if field.help_text %}
+          <small class="form-text text-muted">{{ field.help_text }}</small>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+  
 {% endblock %}
