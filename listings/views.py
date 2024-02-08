@@ -43,7 +43,7 @@ def listing_list(request):
     return render(request, 'listings/listing_list.html', {'listings': listings})
 
 def listing_detail(request, id):
-    listing = Listing.objects.get(id=id)
+    listing = Listing.objects.get(pk=id)
     return render(request, 'listings/listing_detail.html', {'listing': listing})
 
 def add_listing(request):
