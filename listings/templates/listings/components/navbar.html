@@ -6,12 +6,18 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link" href="{% url 'listing_list' %}">Listings</a>
-        </li>
+        {% if user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'view_messages' %}">Messages</a>
+          <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+          </form>
         </li>
+        {% else %}
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'login' %}">Login</a>
+        </li>
+        {% endif %}
         <!-- Include more navigation items here -->
       </ul>
     </div>

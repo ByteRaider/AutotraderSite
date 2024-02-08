@@ -113,4 +113,11 @@ def like_listing(request, listing_id):
         messages.info(request, 'You already like this listing.')
     return redirect('listing_detail', listing_id=listing_id)
 
+# Profile
+def profile(request):
+    user = request.user
+    listings = Listing.objects.filter(seller=user)
+    view_saved_listings = SavedListing.objects.filter(user=user)
 
+
+    return render(request, 'listings/profile.html', {'user': user, 'listings': listings})
