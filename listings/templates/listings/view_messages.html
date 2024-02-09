@@ -7,6 +7,11 @@
         <p><strong>From:</strong> {{ message.sender.username }}</p>
         <p><strong>Content:</strong> {{ message.content }}</p>
     </div>
+    <a href="{% url 'reply_to_message' message.id %}">Reply</a>
 {% endfor %}
+{% include "listings/components/pagination.html" with page_obj=page_obj %}
 {% endif %}
+
+
+
 {% endblock %}

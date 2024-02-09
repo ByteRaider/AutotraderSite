@@ -10,15 +10,12 @@
         <p>Price: ${{ listing.price }}</p>
         <p>VIN: {{ listing.VIN }}</p>
         <p>Seller: {{ listing.seller }}</p>
+        <a href="{% url 'send_message' listing.id listing.seller.id %}">Message seller</a>
         <picture>{{ listing.image.url }}</picture>
-        <a href="{% url 'save_listing' listing.id %}">Save this listing</a>
-
         <form action="{% url 'save_listing' listing.id  %}" method="post">
             {% csrf_token %}
             <button type="submit">Save Listing</button>
           </form>
-
-
         <a href="{% url 'remove_saved_listing' listing.id %}">Remove from saved listings</a>
         <a href="{% url 'like_listing' listing.id %}">Like this listing</a>
         <a href="{% url 'listing_list' %}">Back to listings</a>

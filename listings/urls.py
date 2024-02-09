@@ -21,6 +21,8 @@ urlpatterns = [
     
     path('messages/send/<int:listing_id>/<int:receiver_id>/', views.send_message, name='send_message'),
     path('messages/', views.view_messages, name='messages'),
+    path('messages/reply/<int:message_id>/', views.reply_to_message, name='reply_to_message'),
+
 ]
 
 

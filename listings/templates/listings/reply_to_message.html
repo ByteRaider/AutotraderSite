@@ -1,0 +1,10 @@
+{% extends 'listings/base.html' %}
+{% block content %}
+<h2>Reply to Message</h2>
+<p>Original Message: "{{ original_message.content }}" from {{ original_message.sender }}</p>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send Reply</button>
+</form>
+{% endblock %}

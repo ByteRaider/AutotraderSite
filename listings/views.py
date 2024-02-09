@@ -1,12 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404
-from django.urls import reverse
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from .models import Profile, Listing, ListingImage, Message, SavedListing, ListingLike
-from .forms import UserRegisterForm, ListingForm, ListingImageForm, MessageForm
+from .forms import UserRegisterForm, ListingForm, ListingImageForm, MessageForm, MessageReplyForm
 
 def register(request):
     if request.method == 'POST':
@@ -108,6 +107,28 @@ def view_messages(request):
     page_obj = paginator.get_page(page_number)
     return render(request, 'listings/view_messages.html', {'page_obj': page_obj})
 
+def reply_to_message(request, message_id):
+    original_message = get_object_or_404(Message, id=message_id)
+    
+    if request.method == 'POST':
+        form = MessageReplyForm(request.POST)
+        if form.is_valid():
+            reply = form.save(commit=False)
+            reply.sender = request.user
+            reply.receiver = original_message.sender  # Assuming you want to reply to the original sender
+            # Set additional fields as necessary, e.g., linking to the same conversation/thread
+            reply.save()
+            # Redirect to a confirmation page, the inbox, or the original message
+            return redirect('messages')
+    else:
+        form = MessageReplyForm()
+
+    
+    return render(request, 'listings/reply_to_message.html', {
+        'form': form,
+        'original_message': original_message
+    })
+
 # <!  LIKEs -->
 def like_listing(request, listing_id):
     listing, created = ListingLike.objects.get_or_create(user=request.user, listing_id=listing_id)
@@ -121,7 +142,7 @@ def like_listing(request, listing_id):
 def profile(request):
     user = request.user
     listings = Listing.objects.filter(seller=user)
-    view_saved_listings = SavedListing.objects.filter(user=user)
+    #saved_listings = SavedListing.objects.filter(user=user)
 
 
     return render(request, 'listings/profile.html', {'user': user, 'listings': listings})
