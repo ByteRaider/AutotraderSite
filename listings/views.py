@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, redirect
@@ -43,8 +44,8 @@ def listing_list(request):
     return render(request, 'listings/listing_list.html', {'listings': listings})
 
 def listing_detail(request, id):
-    listing = Listing.objects.get(pk=id)
-    return render(request, 'listings/listing_detail.html', {'listing': listing})
+    listing = get_object_or_404(Listing, pk=id)
+    return render(request, 'listings/listing_detail.html', {'listing': listing })
 
 def add_listing(request):
     if request.method == 'POST':

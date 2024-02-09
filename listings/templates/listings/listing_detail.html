@@ -1,1 +1,21 @@
-<h1>listing detail page</h1>
+{% extends "listings/base.html" %}
+{% block content %}
+<section>
+    <article>
+        <header>
+            <h2> Details for {{ listing.make }} {{ listing.model }}</h2>
+        </header>
+        <h3>Year: {{ listing.year }}</h3><h3>Mileage: {{ listing.mileage }}</h3>
+        <p>Description:{{ listing.description }}</p>
+        <p>Price: ${{ listing.price }}</p>
+        <p>VIN: {{ listing.VIN }}</p>
+        <p>Seller: {{ listing.seller }}</p>
+        <picture>{{ listing.image.url }}</picture>
+        <a href="{% url 'save_listing' listing.id %}">Save this listing</a>
+        <a href="{% url 'remove_saved_listing' listing.id %}">Remove from saved listings</a>
+        <a href="{% url 'like_listing' listing.id %}">Like this listing</a>
+        <a href="{% url 'listing_list' %}">Back to listings</a>
+
+    </article>
+</section>
+{% endblock %}

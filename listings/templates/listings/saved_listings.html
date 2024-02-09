@@ -4,7 +4,10 @@
 
 
 
-{% for saved_listing in saved_listings %}
+<article>
+    <header><h2>My saved Listings</h2></header>
+    <ul>
+        {% for saved_listing in saved_listings %}
     <li>
         <a href="{% url 'listing_detail' saved_listing.listing.id %}">
             {{ saved_listing.listing.make }} {{ saved_listing.listing.model }} - ${{ saved_listing.listing.price }}
@@ -13,6 +16,7 @@
         <a href="{% url 'like_listing' saved_listing.listing.id %}">Like</a>
     </li>
 {% endfor %}
-
+    </ul>
+</article>
 
 {% endblock %}

@@ -4,17 +4,22 @@
 
 <!-- add_listing.html -->
 <form method="post" enctype="multipart/form-data" class="p-3">
-    {% csrf_token %}
-    {% for field in listing_form %}
-      <div class="form-group">
-        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-        {{ field|add_class:"form-control" }}
-        {% if field.help_text %}
-          <small class="form-text text-muted">{{ field.help_text }}</small>
-        {% endif %}
-      </div>
-    {% endfor %}
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
+  {% csrf_token %}
+  {% for field in listing_form %}
+    <div class="form-group">
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field|add_class:"form-control" }}
+      {% if field.help_text %}
+        <small class="form-text text-muted">{{ field.help_text }}</small>
+      {% endif %}
+    </div>
+  {% endfor %}
+  <div class="form-group">
+    <label for="image">Images</label>
+    <input type="file" name="image" id="image" class="form-control" multiple>
+    <small class="form-text text-muted">Select multiple images if needed. Hold down the CTRL or CMD key to select multiple images.</small>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
   
 {% endblock %}
