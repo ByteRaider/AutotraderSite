@@ -1,22 +1,23 @@
-<!-- saved_listings.html -->
 {% extends "listings/base.html" %}
 {% block content %}
 
-
-
 <article>
-    <header><h2>My saved Listings</h2></header>
-    <ul>
+    <header><h2>My Saved Listings</h2></header>
+    <h3> You have {{ saved_listings.count }} saved listings.</h3>
+    
         {% for saved_listing in saved_listings %}
-    <li>
-        <a href="{% url 'listing_detail' saved_listing.listing.id %}">
-            {{ saved_listing.listing.make }} {{ saved_listing.listing.model }} - ${{ saved_listing.listing.price }}
-        </a>
-        <a href="{% url 'remove_saved_listing' saved_listing.listing.id %}">Remove</a>
-        <a href="{% url 'like_listing' saved_listing.listing.id %}">Like</a>
-    </li>
-{% endfor %}
-    </ul>
+        <div class="card" style="width: 18rem;">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+              <h4 class="card-title">{{ saved_listing.listing.make }} {{ saved_listing.listing.model }} - {{ saved_listing.listing.year }}</h4>
+              <p class="card-text"> {{ saved_listing.listing.description }} ${{ saved_listing.listing.price }}</p>
+              <a href="{% url 'listing_detail' saved_listing.listing.id %}" class="btn btn-primary btn-sm">View Details</a><a href="{% url 'send_message' saved_listing.listing.id saved_listing.listing.seller.id %}" class="btn btn-primary btn-sm">Send Message</a>
+              <a href="{% url 'remove_saved_listing' saved_listing.listing.id %}" class="btn btn-primary btn-sm">Remove</a><a href="{% url 'like_listing' saved_listing.listing.id %}" class="btn btn-primary btn-sm">LIKE</a>
+            </div>
+        </div>
+
+        {% endfor %}
+
 </article>
 
 {% endblock %}

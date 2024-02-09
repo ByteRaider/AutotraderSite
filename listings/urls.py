@@ -20,7 +20,7 @@ urlpatterns = [
     path('listings/<int:listing_id>/like/', views.like_listing, name='like_listing'),
     
     path('messages/send/<int:listing_id>/<int:receiver_id>/', views.send_message, name='send_message'),
-    path('messages/', views.view_messages, name='view_messages'),
+    path('messages/', views.view_messages, name='messages'),
 ]
 
 

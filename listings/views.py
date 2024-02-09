@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, redirect
@@ -70,13 +71,14 @@ def save_listing(request, listing_id):
         if created:
             return redirect('listing_detail', listing_id=listing_id)
         else:
-            return redirect('listing_list')  # Or wherever you want to redirect if listing is already saved
+            return redirect('profile')  # Or wherever you want to redirect if listing is already saved
     else:
         return redirect('listing_list')  # Redirect to listing list if saving is not through POST request
 
 def view_saved_listings(request):
     saved_listings = SavedListing.objects.filter(user=request.user)
     return render(request, 'listings/saved_listings.html', {'saved_listings': saved_listings})
+    
 
 def remove_saved_listing(request, listing_id):
     SavedListing.objects.filter(user=request.user, listing_id=listing_id).delete()
@@ -93,6 +95,7 @@ def send_message(request, listing_id, receiver_id):
             message.receiver = User.objects.get(pk=receiver_id)
             message.listing = Listing.objects.get(pk=listing_id)
             message.save()
+            messages.success(request, 'Message sent successfully.')
             return redirect('messages')
     else:
         form = MessageForm()
