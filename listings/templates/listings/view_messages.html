@@ -1,9 +1,12 @@
 {% extends "listings/base.html" %}
 {% block content %}
-{% for message in messages %}
+<h2>Messages</h2>
+{% if page_obj.count == 0 %}No messages{% else %}
+{% for message in page_obj %}
     <div>
         <p><strong>From:</strong> {{ message.sender.username }}</p>
         <p><strong>Content:</strong> {{ message.content }}</p>
     </div>
 {% endfor %}
+{% endif %}
 {% endblock %}
