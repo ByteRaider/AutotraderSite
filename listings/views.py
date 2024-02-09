@@ -75,7 +75,7 @@ def save_listing(request, listing_id):
 
 def view_saved_listings(request):
     saved_listings = SavedListing.objects.filter(user=request.user)
-    return render(request, 'listings/view_saved_listings.html', {'saved_listings': saved_listings})
+    return render(request, 'listings/saved_listings.html', {'saved_listings': saved_listings})
 
 def remove_saved_listing(request, listing_id):
     SavedListing.objects.filter(user=request.user, listing_id=listing_id).delete()
