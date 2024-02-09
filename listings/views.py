@@ -75,7 +75,7 @@ def save_listing(request, listing_id):
         return redirect('listing_list')  # Redirect to listing list if saving is not through POST request
 
 def view_saved_listings(request):
-    saved_listings = SavedListing.objects.filter(user=request.user)
+    saved_listings = SavedListing.objects.select_related('listing').filter(user=request.user)
     return render(request, 'listings/saved_listings.html', {'saved_listings': saved_listings})
     
 
@@ -101,11 +101,12 @@ def send_message(request, listing_id, receiver_id):
     return render(request, 'listings/send_message.html', {'form': form})
 
 def view_messages(request):
-    message_list = Message.objects.filter(receiver=request.user).order_by('-created_at')
+    message_list = Message.objects.select_related('sender', 'receiver').filter(receiver=request.user).order_by('-created_at')
     paginator = Paginator(message_list, 10)  # Show 10 messages per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'listings/view_messages.html', {'page_obj': page_obj})
+
 
 def reply_to_message(request, message_id):
     original_message = get_object_or_404(Message, id=message_id)
