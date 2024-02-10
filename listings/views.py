@@ -3,7 +3,9 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse, HttpResponseBadRequest
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.timezone import localtime
 from django.urls import reverse
 from .models import Profile, Listing, ListingImage, Message, SavedListing, ListingLike
 from .forms import UserRegisterForm, ListingForm, ListingImageForm, MessageForm, MessageReplyForm
@@ -108,16 +110,29 @@ def view_messages(request):
     page_obj = paginator.get_page(page_number)
     return render(request, 'listings/view_messages.html', {'page_obj': page_obj})
 
-
+@csrf_exempt  # Note: It's better to handle CSRF tokens correctly in AJAX requests rather than disabling them.
 def reply_to_message(request, message_id):
-    parent_message = get_object_or_404(Message, id=message_id)
-    if request.method == "POST":
+    # Check for X-Requested-With header to identify AJAX requests
+    if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         content = request.POST.get('content')
-        if content:
-            Message.objects.create(sender=request.user, receiver=parent_message.sender if request.user != parent_message.sender else parent_message.receiver, content=content, parent=parent_message)
-            return redirect('view_message_thread', message_id=message_id)
-    # Redirect to the thread view if GET request or content is empty
-    return redirect('view_message_thread', message_id=message_id)
+        parent_message = get_object_or_404(Message, id=message_id)
+        reply = Message.objects.create(
+            sender=request.user,
+            receiver=parent_message.sender if request.user != parent_message.sender else parent_message.receiver,
+            content=content,
+            parent=parent_message
+        )
+        # Format the creation timestamp
+        formatted_timestamp = localtime(reply.created_at).strftime('%Y-%m-%d %H:%M:%S')
+        return JsonResponse({
+            'message': 'Reply was successfully added.',
+            'sender': reply.sender.username,
+            'content': reply.content,
+            'created_at': formatted_timestamp
+        })
+    
+    # If not AJAX, or not POST, return a bad request response
+    return HttpResponseBadRequest('Invalid request')
 
 def view_message_thread(request, message_id):
     # Retrieve the main message

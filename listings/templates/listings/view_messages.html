@@ -1,17 +1,21 @@
 {% extends "listings/base.html" %}
 {% block content %}
-<h2>Messages</h2>
-{% if page_obj == 0 %}No messages{% else %}
-{% for message in page_obj %}
-    <div>
-        <p><strong>From:</strong> {{ message.sender.username }}</p>
-        <p><strong>Content:</strong> {{ message.content }}</p>
-    </div>
-    <a href="{% url 'view_message_thread' message.id %}">Reply</a>
-{% endfor %}
-{% include "listings/components/pagination.html" with page_obj=page_obj %}
-{% endif %}
-
- 
+<h2>Message Threads</h2>
+<div class="message-threads">
+    {% if messages.count == 0 %}{% else %}
+    {% for message in page_obj %}
+        <div class="thread">
+            <a href="{% url 'view_message_thread' message.id %}">
+                <p><strong>{{ message.sender.username }}</strong> to <strong>{{ message.receiver.username }}</strong></p>
+                <p>{{ message.content|truncatechars:50 }}</p>
+                <p>{{ message.created_at }}</p>
+                <a href="{% url 'delete_message' message.id %}" onclick="return confirm('Are you sure you want to delete this message?')">Delete</a>
+            </a>
+        </div>
+        {% empty %}
+        <p>No messages yet.</p>
+    {% endfor %}
+    {% endif %}
+</div>
 
 {% endblock %}

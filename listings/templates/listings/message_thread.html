@@ -1,12 +1,93 @@
 {% extends "listings/base.html" %}
 {% block content %}
-<h2>Message Thread</h2>
+<h2>Conversation with {{ main_message.receiver.username }}</h2>
 
-<form action="{% url 'reply_to_message' main_message.id %}" method="post">
-    {% csrf_token %}
-    <textarea name="content" required></textarea>
-    <button type="submit">Reply</button>
-</form>
+<div class="main-message">
+    <p><strong>{{ main_message.sender.username }}</strong>: {{ main_message.content }}</p>
+    <p>{{ main_message.created_at }}</p>
+</div>
+<hr>
+<div class="replies">
+    {% for reply in replies %}
+        <div class="reply">
+            <p><strong>{{ reply.sender.username }}</strong>: {{ reply.content }}</p>
+            <p>{{ reply.created_at }}</p>
+        </div>
+    {% empty %}
+        <p>No replies yet.</p>
+    {% endfor %}
+</div>
+
+<div class="reply-form">
+    <form method="post" action="{% url 'reply_to_message' main_message.id %}">
+        {% csrf_token %}
+        <textarea name="content" placeholder="Write your reply here..."></textarea>
+        <button type="submit">Reply</button>
+    </form>
+</div>
 
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const replyForm = document.querySelector(".reply-form form");
+        replyForm.addEventListener("submit", function(e) {
+            e.preventDefault();  // Prevent the default form submission
+            const formData = new FormData(replyForm);
+        <!--
+            // AJAX POST request to the server
+            fetch(replyForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),  // Ensure CSRF token is sent
+                },
+                credentials: 'include'  // Ensure cookies are sent with the request
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error('Error:', data.error);
+                } else {
+                    // Append the new reply to the conversation thread
+                    const repliesDiv = document.querySelector('.replies');
+                    const replyElement = document.createElement('p');
+                    replyElement.innerHTML = `<strong>${data.sender}</strong>: ${data.content} <small>${data.created_at}</small>`;
+                    repliesDiv.appendChild(replyElement);
+                    
+                    // Optionally clear the textarea after submitting
+                    replyForm.reset();
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+            -->
+        });
+    });
+    </script>
+    
+
+
+<script>
+    fetch(replyForm.action, {
+    method: 'POST',
+    body: new FormData(replyForm),
+    headers: {
+        'X-Requested-With': 'XMLHttpRequest', // This line is crucial for Django to recognize the request as AJAX
+        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+    },
+    credentials: 'same-origin' // Ensures cookies, including CSRF token, are sent with the request
+})
+.then(response => response.json())
+.then(data => {
+    // Handle the response data
+    console.log(data);
+})
+.catch((error) => {
+    console.error('Error:', error);
+});
+
+</script>
+   
 {% endblock %}
+
