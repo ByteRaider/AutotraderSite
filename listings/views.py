@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseForbidden
 from django.urls import reverse
 from .models import Profile, Listing, ListingImage, Message, SavedListing, ListingLike
 from .forms import UserRegisterForm, ListingForm, ListingImageForm, MessageForm, MessageReplyForm
@@ -121,8 +122,9 @@ def reply_to_message(request, message_id):
 def view_message_thread(request, message_id):
     # Retrieve the main message
     main_message = get_object_or_404(Message, id=message_id)
-    if request.user not in [main_message.sender, main_message.receiver]:
-        return redirect('listing_list')  # Redirect to listing list if user is not the sender or receiver
+    if request.user != main_message.sender and request.user != main_message.receiver:
+        return HttpResponseForbidden("Oops! Looks like you should not be arround here.")
+      # Redirect to listing list if user is not the sender or receiver
     # Retrieve replies to the main message
     replies = main_message.replies.all().order_by('created_at')
     
@@ -135,9 +137,11 @@ def delete_message(request, message_id):
     message = get_object_or_404(Message, id=message_id)
     if request.user == message.sender or request.user == message.receiver:
         message.delete()
-        # Redirect to the message list or a suitable page after deletion
-        return redirect('view_messages')
-    return redirect('listing_list')  # Adjust as needed for unauthorized attempts
+        messages.success(request, "Message deleted successfully.")
+        return redirect('messages')  # Adjust the redirect as needed
+    else:
+        messages.error(request, "You do not have permission to delete this message.")
+        return redirect('view_message_thread', message_id=message_id)
 
 # <!  LIKEs -->
 def like_listing(request, listing_id):
