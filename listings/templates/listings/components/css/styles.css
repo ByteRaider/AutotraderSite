@@ -1,0 +1,37 @@
+body,
+.card {
+  background-color: #121212; /* Dark background */
+  color: #b3b3b3; /* Light gray text */
+}
+
+.form-label {
+  color: #e0e0e0; /* Slightly brighter gray for labels */
+}
+
+.form-control {
+  background-color: #333333;
+  border: none;
+  color: #fff;
+}
+
+.form-control:focus {
+  background-color: #444444;
+  color: #fff;
+  box-shadow: 0 0 0 0.25rem rgba(255, 165, 0, 0.5); /* Orange glow on focus */
+}
+
+.btn-primary {
+  background-color: #9c27b0; /* Purple */
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #7b1fa2;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card {
+    margin-top: 20vh; /* More vertical space on smaller screens */
+  }
+}

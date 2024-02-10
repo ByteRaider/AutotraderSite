@@ -1,15 +1,19 @@
 {% extends "listings/base.html" %}
-{% block content %}
-<h2>Car Listings</h2>
-<form method="get">
-    <!-- Render search form fields here -->
-    Make: <input type="text" name="make" value="{{ request.GET.make }}">
-    Model: <input type="text" name="model" value="{{ request.GET.model }}">
-    <!-- Add fields for year, min_price, and max_price -->
-    <button type="submit">Search</button>
-</form>
+{% block title %}Car Listings{% endblock %}
 
+{% block content %}
+<div class="row">
+  <div class="container-fluid">
+    <a class="navbar-brand">Search your dream</a>
+    <form class="d-flex">
+      <input class="form-control me-2" type="search" placeholder="Make" aria-label="Search" name="make" value="{{ request.GET.make }}">
+      <input class="form-control me-2" type="search" placeholder="Model" aria-label="Search" name="model" value="{{ request.GET.model }}">
+      <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+  </div>
+</div>
 <!-- Listings display -->
+
 <!-- listing_list.html -->
 <div class="row">
     {% for listing in listings %}
