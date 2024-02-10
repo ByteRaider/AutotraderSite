@@ -109,30 +109,20 @@ def view_messages(request):
 
 
 def reply_to_message(request, message_id):
-    original_message = get_object_or_404(Message, id=message_id)
-    
-    if request.method == 'POST':
-        form = MessageReplyForm(request.POST)
-        if form.is_valid():
-            reply = form.save(commit=False)
-            reply.sender = request.user
-            reply.receiver = original_message.sender  # Assuming you want to reply to the original sender
-            # Set additional fields as necessary, e.g., linking to the same conversation/thread
-            reply.save()
-            # Redirect to a confirmation page, the inbox, or the original message
-            return redirect('messages')
-    else:
-        form = MessageReplyForm()
-
-    
-    return render(request, 'listings/reply_to_message.html', {
-        'form': form,
-        'original_message': original_message
-    })
+    parent_message = get_object_or_404(Message, id=message_id)
+    if request.method == "POST":
+        content = request.POST.get('content')
+        if content:
+            Message.objects.create(sender=request.user, receiver=parent_message.sender if request.user != parent_message.sender else parent_message.receiver, content=content, parent=parent_message)
+            return redirect('view_message_thread', message_id=message_id)
+    # Redirect to the thread view if GET request or content is empty
+    return redirect('view_message_thread', message_id=message_id)
 
 def view_message_thread(request, message_id):
     # Retrieve the main message
     main_message = get_object_or_404(Message, id=message_id)
+    if request.user not in [main_message.sender, main_message.receiver]:
+        return redirect('listing_list')  # Redirect to listing list if user is not the sender or receiver
     # Retrieve replies to the main message
     replies = main_message.replies.all().order_by('created_at')
     
@@ -140,6 +130,15 @@ def view_message_thread(request, message_id):
         'main_message': main_message,
         'replies': replies,
     })
+
+def delete_message(request, message_id):
+    message = get_object_or_404(Message, id=message_id)
+    if request.user == message.sender or request.user == message.receiver:
+        message.delete()
+        # Redirect to the message list or a suitable page after deletion
+        return redirect('view_messages')
+    return redirect('listing_list')  # Adjust as needed for unauthorized attempts
+
 # <!  LIKEs -->
 def like_listing(request, listing_id):
     listing, created = ListingLike.objects.get_or_create(user=request.user, listing_id=listing_id)

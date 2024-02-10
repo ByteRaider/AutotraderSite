@@ -2,28 +2,11 @@
 {% block content %}
 <h2>Message Thread</h2>
 
-<!-- Display the main message -->
-<div class="main-message">
-    <p><strong>{{ main_message.sender.username }}</strong> ({{ main_message.created_at|date:"M d, Y H:i" }}): {{ main_message.content }}</p>
-</div>
+<form action="{% url 'reply_to_message' main_message.id %}" method="post">
+    {% csrf_token %}
+    <textarea name="content" required></textarea>
+    <button type="submit">Reply</button>
+</form>
 
-<!-- Display replies -->
-<div class="replies">
-    {% for reply in replies %}
-        <div class="reply">
-            <p><strong>{{ reply.sender.username }}</strong> ({{ reply.created_at|date:"M d, Y H:i" }}): {{ reply.content }}</p>
-        </div>
-    {% endfor %}
-</div>
-
-<!-- Optional: Form to reply to the main message -->
-<div class="reply-form">
-    <form method="post">
-        {% csrf_token %}
-        <label for="replyContent">Your Reply</label>
-        <textarea id="replyContent" name="reply_content"></textarea>
-        <button type="submit">Send Reply</button>
-    </form>
-</div>
 
 {% endblock %}
