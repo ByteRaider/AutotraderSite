@@ -6,7 +6,7 @@ from . import views
 urlpatterns = [
     path('accounts/profile/', views.profile, name='profile'),
     path('login/', auth_views.LoginView.as_view(template_name='listings/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(template_name='listings/login.html'), name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='listings/profile.html'), name='logout'),
     path('register/', views.register, name='register'),
     
     path('', views.listing_list, name='listing_list'),
@@ -22,7 +22,8 @@ urlpatterns = [
     path('messages/send/<int:listing_id>/<int:receiver_id>/', views.send_message, name='send_message'),
     path('messages/', views.view_messages, name='messages'),
     path('messages/reply/<int:message_id>/', views.reply_to_message, name='reply_to_message'),
-
+    path('messages/thread/<int:message_id>/', views.view_message_thread, name='view_message_thread'),
 ]
+
 
 

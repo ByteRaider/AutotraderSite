@@ -1,9 +1,15 @@
 {% extends "listings/base.html" %}
 {% block content %}
   <h2>Register</h2>
-  <form class= method="post">
+  <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
+
+    <label for="first_name">First Name:</label><input type="text" name="first_name"></label>
+    <label for="last_name">Last Name:</label><input type="text" name="last_name"></label>
+    
+    
+  
     <button type="submit">Register</button>
   </form>
 {% endblock %}

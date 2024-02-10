@@ -130,6 +130,16 @@ def reply_to_message(request, message_id):
         'original_message': original_message
     })
 
+def view_message_thread(request, message_id):
+    # Retrieve the main message
+    main_message = get_object_or_404(Message, id=message_id)
+    # Retrieve replies to the main message
+    replies = main_message.replies.all().order_by('created_at')
+    
+    return render(request, 'listings/message_thread.html', {
+        'main_message': main_message,
+        'replies': replies,
+    })
 # <!  LIKEs -->
 def like_listing(request, listing_id):
     listing, created = ListingLike.objects.get_or_create(user=request.user, listing_id=listing_id)

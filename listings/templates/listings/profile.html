@@ -5,7 +5,8 @@
     <article>
         <header>
         </header>
-        <p>Welcome, {{ user.username }}!</p>
+        <p>Welcome,{% if user.is_authenticated %} {{ user.username }}
+            {% else %} estranger {% endif %}!</p>
     </article>
 
     <article>

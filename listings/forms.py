@@ -7,12 +7,12 @@ class UserRegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name']
 
 class ListingForm(forms.ModelForm):
     class Meta:
         model = Listing
-        fields = ['seller','make', 'model', 'year', 'mileage', 'condition', 'description', 'price', 'VIN']
+        fields = ['make', 'model', 'year', 'mileage', 'condition', 'description', 'price', 'VIN']
         # Include other fields as necessary
 
 class SearchForm(forms.Form):
