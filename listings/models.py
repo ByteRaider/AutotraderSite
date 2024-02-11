@@ -46,19 +46,7 @@ class ListingLike(models.Model):
         unique_together = ('user', 'listing')
 
 
-#  Messaging  -- Maybe an app later?
-class Message(models.Model):
-    sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
-    receiver = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
-    listing = models.ForeignKey('Listing', on_delete=models.CASCADE, null=True, blank=True)
-    content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    parent = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE)
-    is_read = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f'Message from {self.sender} to {self.receiver} - {self.created_at}'
-
+#  Messaging  -- Maybe create app later?
 class Thread(models.Model):
     listing = models.ForeignKey(Listing, related_name='threads', on_delete=models.CASCADE)
     initiator = models.ForeignKey(User, related_name='initiated_threads', on_delete=models.CASCADE)
@@ -69,3 +57,17 @@ class Thread(models.Model):
 
     def __str__(self):
         return f"{self.listing} | {self.initiator} -> {self.receiver}"
+
+class Message(models.Model):
+    listing = models.ForeignKey('Listing', on_delete=models.CASCADE, null=True, blank=True)
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
+    thread = models.ForeignKey(Thread, related_name='messages', on_delete=models.CASCADE)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    content = models.TextField()
+
+    def __str__(self):
+        return f'Message from {self.sender} to {self.receiver} - {self.created_at}'
+
