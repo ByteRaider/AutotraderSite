@@ -29,64 +29,68 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const replyForm = document.querySelector(".reply-form form");
-        replyForm.addEventListener("submit", function(e) {
-            e.preventDefault();  // Prevent the default form submission
-            const formData = new FormData(replyForm);
-        <!--
-            // AJAX POST request to the server
-            fetch(replyForm.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),  // Ensure CSRF token is sent
-                },
-                credentials: 'include'  // Ensure cookies are sent with the request
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    console.error('Error:', data.error);
-                } else {
-                    // Append the new reply to the conversation thread
-                    const repliesDiv = document.querySelector('.replies');
-                    const replyElement = document.createElement('p');
-                    replyElement.innerHTML = `<strong>${data.sender}</strong>: ${data.content} <small>${data.created_at}</small>`;
-                    repliesDiv.appendChild(replyElement);
-                    
-                    // Optionally clear the textarea after submitting
-                    replyForm.reset();
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-            -->
+    const replyForm = document.querySelector('.reply-form form');
+    const notificationsDiv = document.createElement('div'); // Container for notifications
+    notificationsDiv.className = 'notifications';
+    document.body.appendChild(notificationsDiv); // Append the container to the body or another suitable container
+
+    replyForm.addEventListener("submit", function(e) {
+        e.preventDefault();  // Prevent the default form submission
+        const formData = new FormData(replyForm);
+
+        // AJAX POST request to the server
+        fetch(replyForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken'),  // Ensure CSRF token is sent
+            },
+            credentials: 'include'  // Ensure cookies are sent with the request
+        })
+        .then(response => {
+            if(response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.'); // Handle non-2xx responses
+        })
+        .then(data => {
+            if (data.error) {
+                // Display error notification
+                displayNotification('Message failed to send.', data.error);
+            } else {
+                // Append the new reply to the conversation thread
+                const repliesDiv = document.querySelector('.replies');
+                const replyElement = document.createElement('p');
+                replyElement.innerHTML = `<strong>${data.sender}</strong>: ${data.content} <small>${data.created_at}</small>`;
+                repliesDiv.appendChild(replyElement);
+                
+                // Clear the textarea after submitting
+                replyForm.reset();
+                
+                // Display success notification
+                displayNotification('Message has been sent successfully.', 'success');
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            // Display error notification
+            displayNotification('Message failed to send.', 'error');
         });
     });
-    </script>
-    
 
+    function displayNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.textContent = message;
+        notification.className = `notification ${type}`; // Use this class to style your notification
+        notificationsDiv.appendChild(notification);
 
-<script>
-    fetch(replyForm.action, {
-    method: 'POST',
-    body: new FormData(replyForm),
-    headers: {
-        'X-Requested-With': 'XMLHttpRequest', // This line is crucial for Django to recognize the request as AJAX
-        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-    },
-    credentials: 'same-origin' // Ensures cookies, including CSRF token, are sent with the request
-})
-.then(response => response.json())
-.then(data => {
-    // Handle the response data
-    console.log(data);
-})
-.catch((error) => {
-    console.error('Error:', error);
+        // Automatically remove the notification after 5 seconds
+        setTimeout(() => {
+            notificationsDiv.removeChild(notification);
+        }, 5000);
+    }
 });
-
 </script>
    
 {% endblock %}

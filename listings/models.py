@@ -59,3 +59,13 @@ class Message(models.Model):
     def __str__(self):
         return f'Message from {self.sender} to {self.receiver} - {self.created_at}'
 
+class Thread(models.Model):
+    listing = models.ForeignKey(Listing, related_name='threads', on_delete=models.CASCADE)
+    initiator = models.ForeignKey(User, related_name='initiated_threads', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(User, related_name='received_threads', on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('listing', 'initiator', 'receiver')
+
+    def __str__(self):
+        return f"{self.listing} | {self.initiator} -> {self.receiver}"
