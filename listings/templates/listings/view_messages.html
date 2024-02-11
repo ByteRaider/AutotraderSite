@@ -2,20 +2,33 @@
 {% block content %}
 <h2>Message Threads</h2>
 <div class="message-threads">
-    {% if messages.count == 0 %}{% else %}
-    {% for message in page_obj %}
-        <div class="thread">
-            <a href="{% url 'view_message_thread' message.id %}">
-                <p><strong>{{ message.sender.username }}</strong> to <strong>{{ message.receiver.username }}</strong></p>
-                <p>{{ message.content|truncatechars:50 }}</p>
-                <p>{{ message.created_at }}</p>
-                <a href="{% url 'delete_message' message.id %}" onclick="return confirm('Are you sure you want to delete this message?')">Delete</a>
-            </a>
-        </div>
-        {% empty %}
-        <p>No messages yet.</p>
+    {% for thread in page_obj %}
+    <div class="thread">
+        <a href="{% url 'view_message_thread' thread.id %}">
+            <p><strong>Listing:</strong> {{ thread.listing.id }} | <strong>Conversation:</strong> {{ thread.initiator.username }} to {{ thread.receiver.username }}</p>
+        </a>
+    </div>
+    {% empty %}
+    <p>No message threads yet.</p>
     {% endfor %}
-    {% endif %}
 </div>
 
+<!-- Pagination Links -->
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+        
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+        
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
 {% endblock %}

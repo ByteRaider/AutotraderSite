@@ -1,13 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
+from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseForbidden, JsonResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.timezone import localtime
 from django.urls import reverse
-from .models import Profile, Listing, ListingImage, Message, SavedListing, ListingLike
+from .models import Profile, Listing, ListingImage, Message, SavedListing, ListingLike, Thread
 from .forms import UserRegisterForm, ListingForm, ListingImageForm, MessageForm, MessageReplyForm
 
 def register(request):
@@ -89,25 +90,51 @@ def remove_saved_listing(request, listing_id):
 
 #<- Messaging -->
 def send_message(request, listing_id, receiver_id):
-    if request.method == 'POST':
-        form = MessageForm(request.POST)
-        if form.is_valid():
-            message = form.save(commit=False)
-            message.sender = request.user
-            message.receiver = User.objects.get(pk=receiver_id)
-            message.listing = Listing.objects.get(pk=listing_id)
-            message.save()
-            messages.success(request, 'Message sent successfully.')
-            return redirect('messages')
-    else:
-        form = MessageForm()
-    return render(request, 'listings/send_message.html', {'form': form})
+    listing = get_object_or_404(Listing, pk=listing_id)
+    receiver = get_object_or_404(User, pk=receiver_id)
+
+    # Define form variable outside of the POST request check
+    # This ensures 'form' is always defined when reaching the render function
+    form = MessageForm(request.POST or None)  # Initialize form for GET and POST
+
+    if request.method == 'POST' and form.is_valid():
+        # Fetch or create the Thread
+        thread, created = Thread.objects.get_or_create(
+            listing=listing,
+            initiator=request.user,  # Assuming the sender is always the initiator
+            receiver=receiver,
+            defaults={'listing': listing, 'initiator': request.user, 'receiver': receiver}
+        )
+        
+        # Save the message with the thread
+        message = form.save(commit=False)
+        message.sender = request.user
+        message.receiver = receiver  # Ensure this matches your model's fields
+        message.thread = thread
+        message.save()
+        
+        messages.success(request, 'Message sent successfully.')
+        return redirect('messages')  # Adjust as needed
+
+    # For GET requests or if form is not valid, show the form
+    return render(request, 'listings/send_message.html', {'form': form, 'listing': listing, 'receiver': receiver})
 
 def view_messages(request):
     message_list = Message.objects.select_related('sender', 'receiver').filter(receiver=request.user).order_by('-created_at')
     paginator = Paginator(message_list, 10)  # Show 10 messages per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    return render(request, 'listings/view_messages.html', {'page_obj': page_obj})
+
+def view_threads(request):
+    # Fetch threads involving the current user, either as initiator or receiver
+    threads = Thread.objects.filter(Q(initiator=request.user) | Q(receiver=request.user)).distinct().order_by('-id')
+    
+    # Implement pagination
+    paginator = Paginator(threads, 10)  # Show 10 threads per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
     return render(request, 'listings/view_messages.html', {'page_obj': page_obj})
 
 @csrf_exempt  # Note: It's better to handle CSRF tokens correctly in AJAX requests rather than disabling them.
