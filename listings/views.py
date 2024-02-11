@@ -143,11 +143,14 @@ def reply_to_message(request, message_id):
     if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         content = request.POST.get('content')
         parent_message = get_object_or_404(Message, id=message_id)
+        #get thread id object
+        thread_id = parent_message.thread.id
         reply = Message.objects.create(
             sender=request.user,
             receiver=parent_message.sender if request.user != parent_message.sender else parent_message.receiver,
             content=content,
-            parent=parent_message
+            parent=parent_message,
+            thread_id=thread_id
         )
         # Format the creation timestamp
         formatted_timestamp = localtime(reply.created_at).strftime('%Y-%m-%d %H:%M:%S')
