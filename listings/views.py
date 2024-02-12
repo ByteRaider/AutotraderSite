@@ -119,13 +119,6 @@ def send_message(request, listing_id, receiver_id):
     # For GET requests or if form is not valid, show the form
     return render(request, 'listings/send_message.html', {'form': form, 'listing': listing, 'receiver': receiver})
 
-def view_messages(request):
-    message_list = Message.objects.select_related('sender', 'receiver').filter(receiver=request.user).order_by('-created_at')
-    paginator = Paginator(message_list, 10)  # Show 10 messages per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'listings/view_messages.html', {'page_obj': page_obj})
-
 def view_threads(request):
     # Fetch threads involving the current user, either as initiator or receiver
     threads = Thread.objects.filter(Q(initiator=request.user) | Q(receiver=request.user)).distinct().order_by('-id')
@@ -136,6 +129,27 @@ def view_threads(request):
     page_obj = paginator.get_page(page_number)
     
     return render(request, 'listings/view_messages.html', {'page_obj': page_obj})
+
+
+def view_messages(request):
+    # Fetch threads involving the current user, either as initiator or receiver
+    threads = Thread.objects.filter(Q(initiator=request.user) | Q(receiver=request.user)).distinct().order_by('-id')
+    # Implement pagination
+    paginator = Paginator(threads, 10)  # Show 10 threads per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'listings/view_messages.html', {'page_obj': page_obj})
+    
+
+
+
+    message_list = Message.objects.select_related('sender', 'receiver').filter(receiver=request.user).order_by('-created_at')
+    paginator = Paginator(message_list, 10)  # Show 10 messages per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'listings/view_messages.html', {'page_obj': page_obj})
+
 
 @csrf_exempt  # Note: It's better to handle CSRF tokens correctly in AJAX requests rather than disabling them.
 def reply_to_message(request, message_id):

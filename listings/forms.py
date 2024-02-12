@@ -36,4 +36,11 @@ class MessageForm(forms.ModelForm):
 class MessageReplyForm(forms.ModelForm):
     class Meta:
         model = Message
-        fields = ['content']
+        fields = ['content', 'listing', 'receiver']
+
+        widgets = {
+            'content': forms.Textarea(attrs={'class':'form-control' }),
+            'listing': forms.HiddenInput(),
+            'receiver': forms.HiddenInput(),
+        }
+            

@@ -1,37 +1,65 @@
-body,
-.card {
-  background-color: #121212; /* Dark background */
-  color: #b3b3b3; /* Light gray text */
+body {
+  background-color: #121212;
+  color: #e0e0e0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.form-label {
-  color: #e0e0e0; /* Slightly brighter gray for labels */
+/* Navbar Styles */
+.navbar {
+  background-color: #121212;
+  border-bottom: 1px solid #ff5722;
+}
+.nav-link {
+  color: #e0e0e0 !important;
+}
+.nav-link.active,
+.nav-link:hover {
+  color: #ff5722 !important;
 }
 
-.form-control {
-  background-color: #333333;
-  border: none;
-  color: #fff;
+/* Hero Layout */
+.hero {
+  background: url("/path/to/your/hero-image.jpg") no-repeat center center;
+  background-size: cover;
+  color: #ff5722;
+  text-align: center;
+  padding: 100px 20px;
+}
+.hero h1 {
+  color: #ff5722;c
+}
+.hero p {
+  color: #673ab7;
+}
+.hero a {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
 }
 
+/* Forms and Buttons */
+
+/* Profile Page */
+.profile-section {
+  border-left: 4px solid #673ab7;
+  margin: 20px 0;
+  padding: 10px;
+}
+
+/* Add Car Listing Form */
 .form-control:focus {
-  background-color: #444444;
-  color: #fff;
-  box-shadow: 0 0 0 0.25rem rgba(255, 165, 0, 0.5); /* Orange glow on focus */
+  border-color: #ff5722;
+  box-shadow: 0 0 0 0.2rem rgba(255, 87, 34, 0.25);
 }
 
-.btn-primary {
-  background-color: #9c27b0; /* Purple */
-  border: none;
-}
-
-.btn-primary:hover {
-  background-color: #7b1fa2;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .card {
-    margin-top: 20vh; /* More vertical space on smaller screens */
-  }
+/*Cards */
+.card{
+  bottom-margin: 5px;
+  background-color: #4caf50;
+  color: white;
+  position: absolute;
+margin-top: 45px;
+margin-bottom: 500px;
 }

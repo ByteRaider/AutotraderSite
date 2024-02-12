@@ -1,16 +1,28 @@
 {% extends "listings/base.html" %}
+{% block articleTitle %}
+View Message Threads
+{% endblock %}
+
 {% block content %}
-<h2>Message Threads</h2>
-<div class="message-threads">
-    {% for thread in page_obj %}
-    <div class="thread">
-        <a href="{% url 'view_message_thread' thread.id %}">
-            <p><strong>Listing:</strong> {{ thread.listing.id }} | <strong>Conversation:</strong> {{ thread.initiator.username }} to {{ thread.receiver.username }}</p>
-        </a>
+
+<div class="">
+    <div class="card-group">
+        <!-- For each message thread -->
+        {% for thread in page_obj %}
+        <div class="col">
+            <div class="card mb-2" style="width: 18rem;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">card title</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">subtitle</h6>
+                  <p class="card-text thread text-truncate">small text area</p>
+                  <a href="{% url 'view_message_thread' thread.id %}" class="card-link">View Conversation</a>
+                  <a href="#" class="card-link disabled">Delete</a>
+                </div>
+              </div>
+        </div>
+        {% endfor %}
     </div>
-    {% empty %}
-    <p>No message threads yet.</p>
-    {% endfor %}
 </div>
 
 <!-- Pagination Links -->

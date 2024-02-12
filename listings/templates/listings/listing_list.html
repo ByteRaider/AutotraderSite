@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="row">
-  <div class="container-fluid">
+  <div class="container-fluid mt-2>
     <a class="navbar-brand">Search your dream</a>
     <form class="d-flex">
       <input class="form-control me-2" type="search" placeholder="Make" aria-label="Search" name="make" value="{{ request.GET.make }}">
@@ -18,7 +18,7 @@
 <div class="row">
     {% for listing in listings %}
       <div class="col-md-4 mb-4">
-        <div class="card">
+        <div class="card mt-2">
           <img src="{{ listing.image.url }}" class="card-img-top" alt="...">
           <div class="card-body">
             <h5 class="card-title">{{ listing.make }} {{ listing.model }}</h5>
