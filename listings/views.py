@@ -72,7 +72,7 @@ def save_listing(request, listing_id):
         listing = Listing.objects.get(pk=listing_id)
         saved_listing, created = SavedListing.objects.get_or_create(user=request.user, listing=listing)
         if created:
-            return redirect('listing_detail', listing_id=listing_id)
+            return redirect('listing_detail', id=listing_id)
         else:
             return redirect('profile')  # Or wherever you want to redirect if listing is already saved
     else:
@@ -209,7 +209,7 @@ def like_listing(request, listing_id):
         messages.success(request, 'Listing liked.')
     else:
         messages.info(request, 'You already like this listing.')
-    return redirect('listing_detail', listing_id=listing_id)
+    return redirect('listing_detail', id=listing_id)
 
 # Profile
 def profile(request):

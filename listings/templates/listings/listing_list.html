@@ -3,6 +3,7 @@
 
 {% block content %}
 <div class="row">
+  <!-- Search bar -->
   <div class="container-fluid mt-2>
     <a class="navbar-brand">Search your dream</a>
     <form class="d-flex">
@@ -24,6 +25,7 @@
             <h5 class="card-title">{{ listing.make }} {{ listing.model }}</h5>
             <p class="card-text">{{ listing.description }}</p>
             <a href="{% url 'listing_detail' listing.id %}" class="btn btn-primary">View Details</a>
+            <a href="{% url 'like_listing' listing.id %}">Like</a>
           </div>
         </div>
       </div>
