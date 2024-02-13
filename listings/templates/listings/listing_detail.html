@@ -91,14 +91,24 @@
           <div class="container">
             <div class="row">
               <div class="col-6">
-                <a href="{% url 'save_listing' listing.id %}">Save to Favorites</a>
+                <form action="{% url 'save_listing' listing.id %}" method="post"  class="p-3">
+                  {% csrf_token %}
+                  <input type="hidden" name="listing_id" value="{{ listing.id }}">
+                  <button type="submit" class="btn" style="background-color: #ff5722">Save to Favorites</button>
+                </form>
               </div>
               <div class="col-6">
-                <a href="{% url 'like_listing' listing.id %}">Like this listing</a>
+                <form action="{% url 'like_listing' listing.id %}" method="post"  class="p-3">
+                  {% csrf_token %}
+                  <input type="hidden" name="listing_id" value="{{ listing.id }}">
+                  <button type="submit" class="btn like" style="background-color: #c022ff">Like</button>
+                </form>
               </div>
             </div>
           </div>
-      </div>
+      </div> <button type="submit" class="btn" style="background-color: #ff5722">
+        Register
+      </button>
     </div>
     <div class="row justify-content-center">
                 <!-- Card -->

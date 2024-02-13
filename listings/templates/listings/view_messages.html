@@ -1,46 +1,57 @@
-{% extends "listings/base.html" %}
-{% block articleTitle %}
-View Message Threads
-{% endblock %}
-
-{% block content %}
+{% extends "listings/base.html" %} {% block articleTitle %} View Message Threads
+{% endblock %} {% block content %}
 
 <div class="">
-    <div class="card-group">
-        <!-- For each message thread -->
-        {% for thread in page_obj %}
-        <div class="col">
-            <div class="card mb-2" style="width: 18rem;">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">card title</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">subtitle</h6>
-                  <p class="card-text thread text-truncate">small text area</p>
-                  <a href="{% url 'view_message_thread' thread.id %}" class="card-link">View Conversation</a>
-                  <a href="#" class="card-link disabled">Delete</a>
-                </div>
-              </div>
+  <div class="card-group">
+    <!-- For each message thread -->
+    {% for thread in page_obj %}
+    <div class="col">
+      <div class="card mb-2" style="width: 18rem">
+        <img src="..." class="card-img-top" alt="..." />
+        <div class="card-body">
+          <h5 class="card-title">
+            <a
+              href="{% url 'listing_detail' thread.listing.id %}"
+              class="card-link"
+            >
+              {{thread.listing.year}} {{thread.listing.model}}
+            </a>
+          </h5>
+          <h6 class="card-subtitle mb-2 text-muted">subtitle</h6>
+          <p class="card-text thread text-truncate">
+            {% if thread.messages.is_read %} 
+            <p>up to date</p> 
+            {% else %} 
+            you have pending messages
+            {% endif %}
+          </p>
+          <a href="{% url 'view_message_thread' thread.id %}" class="card-link"
+            >View Conversation</a
+          >
+          <a href="#" class="card-link disabled">Delete</a>
         </div>
-        {% endfor %}
+      </div>
     </div>
+    {% endfor %}
+  </div>
 </div>
 
 <!-- Pagination Links -->
 <div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
-        
-        <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
-        
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-        {% endif %}
+  <span class="step-links">
+    {% if page_obj.has_previous %}
+    <a href="?page=1">&laquo; first</a>
+    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+    {% endif %}
+
+    <span class="current">
+      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
     </span>
+
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">next</a>
+    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+    {% endif %}
+  </span>
 </div>
 {% endblock %}

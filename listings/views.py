@@ -72,10 +72,13 @@ def save_listing(request, listing_id):
         listing = Listing.objects.get(pk=listing_id)
         saved_listing, created = SavedListing.objects.get_or_create(user=request.user, listing=listing)
         if created:
-            return redirect('listing_detail', id=listing_id)
+            messages.success(request, 'Listing saved successfully.')
+            return redirect('listing_detail', id=listing_id,)
         else:
+            messages.success(request, 'You already saved this listing.')
             return redirect('profile')  # Or wherever you want to redirect if listing is already saved
     else:
+        messages.error(request, 'An error occurred while saving the listing.')
         return redirect('listing_list')  # Redirect to listing list if saving is not through POST request
 
 def view_saved_listings(request):
@@ -133,23 +136,13 @@ def view_threads(request):
 
 def view_messages(request):
     # Fetch threads involving the current user, either as initiator or receiver
-    threads = Thread.objects.filter(Q(initiator=request.user) | Q(receiver=request.user)).distinct().order_by('-id')
+    threads = Thread.objects.prefetch_related('listing', 'initiator', 'receiver').filter(Q(initiator=request.user) | Q(receiver=request.user)).distinct().order_by('-id')
     # Implement pagination
     paginator = Paginator(threads, 10)  # Show 10 threads per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
     return render(request, 'listings/view_messages.html', {'page_obj': page_obj})
-    
-
-
-
-    message_list = Message.objects.select_related('sender', 'receiver').filter(receiver=request.user).order_by('-created_at')
-    paginator = Paginator(message_list, 10)  # Show 10 messages per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'listings/view_messages.html', {'page_obj': page_obj})
-
 
 @csrf_exempt  # Note: It's better to handle CSRF tokens correctly in AJAX requests rather than disabling them.
 def reply_to_message(request, message_id):
@@ -184,6 +177,8 @@ def view_message_thread(request, message_id):
     if request.user != main_message.sender and request.user != main_message.receiver:
         return HttpResponseForbidden("Oops! Looks like you should not be arround here.")
       # Redirect to listing list if user is not the sender or receiver
+    #mark as read
+    Message.objects.filter(thread=main_message.thread, receiver=request.user, is_read=False).update(is_read=True)
     # Retrieve replies to the main message
     replies = main_message.replies.all().order_by('created_at')
     
@@ -206,16 +201,16 @@ def delete_message(request, message_id):
 def like_listing(request, listing_id):
     listing, created = ListingLike.objects.get_or_create(user=request.user, listing_id=listing_id)
     if created:
-        messages.success(request, 'Listing liked.')
+        messages.success(request, ' Like!')
     else:
-        messages.info(request, 'You already like this listing.')
+        messages.info(request, "You've already liked this listing before.")
     return redirect('listing_detail', id=listing_id)
 
 # Profile
 def profile(request):
     user = request.user
     listings = Listing.objects.filter(seller=user)
-    #saved_listings = SavedListing.objects.filter(user=user)
+    saved_listings = SavedListing.objects.filter(user=user)
 
 
     return render(request, 'listings/profile.html', {'user': user, 'listings': listings})

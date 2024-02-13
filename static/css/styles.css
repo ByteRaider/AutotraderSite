@@ -37,7 +37,7 @@ body {
 
 /* Hero Layout */
 .hero {
-  background: url("/path/to/your/hero-image.jpg") no-repeat center center;
+  /* background: url("/static/images/hero-image.jpg") no-repeat center center; */
   background-size: cover;
   color: #ff5722;
   text-align: center;
@@ -93,10 +93,10 @@ body {
 
 /*Cards */
 .card{
-  background-color: rgb(21, 3, 70);
+  background-color: #212529;
   color: #dfe6df;
   margin-top: 45px; 
-  box-shadow: 0 0 0 0.2rem rgba(78, 11, 92, 0.25);
+  box-shadow: 0 0 0 0.4rem rgba(78, 11, 92, 0.25);
   border-radius: 10px;
   padding: 10px;
   margin-bottom: 10px;
@@ -117,3 +117,7 @@ body {
     color: #969494; /* Text color */
     box-shadow: 0 0 0 0.2rem rgba(185, 4, 221, 0.25);
   }
+
+  .unread {
+    color: #1cf108;
+}
