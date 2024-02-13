@@ -1,0 +1,119 @@
+
+
+body {
+  background-color: #121212;
+  color: #e0e0e0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navbar Styles */
+.navbar {
+  background-color: #121212;
+  border-bottom: 1px solid #4caf50;
+}
+.navbar-brand {
+  color: #e0e0e0 !important;
+  font-size: 25px;
+  font-weight: bold;
+}
+.navbar-brand:hover {.a {
+  color: #673ab7;
+}
+.a:hover {
+  color: #4caf50;
+}
+
+  color: #ff5722 !important;
+
+
+}
+.nav-link {
+  color: #e0e0e0 !important;
+}
+.nav-link.active,
+.nav-link:hover {
+  color: #ff5722 !important;
+}
+
+/* Hero Layout */
+.hero {
+  background: url("/path/to/your/hero-image.jpg") no-repeat center center;
+  background-size: cover;
+  color: #ff5722;
+  text-align: center;
+  padding: 100px 20px;
+}
+.hero h1 {
+  color: #ff5722;
+}
+.hero p {
+  color: #673ab7;
+}
+.hero a {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+
+/* Profile Page */
+.profile-section {
+  border-left: 4px solid #673ab7;
+  margin: 20px 0;
+  padding: 10px;
+}
+
+/* Forms and Buttons */
+.form {
+  background-color: #121212;
+  width: max-content;
+  padding: 20px;
+  border-radius: 5px;
+  margin: 0 auto;
+  box-shadow: 0 0 0 0.2rem rgba(78, 11, 92, 0.25);
+  
+}
+.form-control, #id_email, #id_password1, #id_password2,
+#id_username, #id_password {
+  background-color: rgba(78, 11, 92, 0.25);
+  color: #4caf50;
+  border-color: #673ab7;
+  border-radius: 20px;
+  padding: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.5s ease;
+  box-shadow: 0 0 0 0.2rem rgba(185, 4, 221, 0.25);
+  resize: vertical;
+
+}
+
+/*Cards */
+.card{
+  background-color: rgb(21, 3, 70);
+  color: #dfe6df;
+  margin-top: 45px; 
+  box-shadow: 0 0 0 0.2rem rgba(78, 11, 92, 0.25);
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  
+
+}
+
+/* send message form content text area */
+  #id_content {
+    width: 100%; 
+    max-width: 100%; 
+    min-height: 100px; 
+    height: auto; 
+    resize: vertical; 
+    padding: 10px; 
+    border: 1px solid #4caf50; 
+    background-color: rgba(78, 11, 92, 0.25);
+    color: #969494; /* Text color */
+    box-shadow: 0 0 0 0.2rem rgba(185, 4, 221, 0.25);
+  }

@@ -1,25 +1,119 @@
-{% extends "listings/base.html" %}
-{% block content %}
+{% extends "listings/base.html" %} {% block content %}
 <section>
-    <article>
-        <header>
-            <h2> Details for {{ listing.make }} {{ listing.model }}</h2>
-        </header>
-        <h3>Year: {{ listing.year }}</h3><h3>Mileage: {{ listing.mileage }}</h3>
-        <p>Description:{{ listing.description }}</p>
-        <p>Price: ${{ listing.price }}</p>
-        <p>VIN: {{ listing.VIN }}</p>
-        <p>Seller: {{ listing.seller }}</p>
-        <a href="{% url 'send_message' listing.id listing.seller.id %}">Message seller</a>
-        <picture>{{ listing.image.url }}</picture>
-        <form action="{% url 'save_listing' listing.id  %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Save Listing</button>
-          </form>
-        <a href="{% url 'remove_saved_listing' listing.id %}">Remove from saved listings</a>
-        <a href="{% url 'like_listing' listing.id %}">Like this listing</a>
-        <a href="{% url 'listing_list' %}">Back to listings</a>
-
-    </article>
+  <article>
+    <header>
+      <h2 class="header text-center">Listing Details for {{ listing.year }} {{ listing.make }} {{ listing.model }}</h2>
+    </header>
+    <div class="container">
+      <div class="row">
+        <div class="col-3 bg-info-emphasis justify-content-center">
+          <p>Sponsored Content</p>
+        </div>
+        <div class="col-3 bg-info-emphasis justify-content-center">
+          <p>Sponsored Content</p>
+        </div>
+        <div class="col-3 bg-info-emphasis justify-content-center">
+          <p>Sponsored Content</p>
+        </div>
+        <div class="col-3 bg-info-emphasis justify-content-center">
+          <p>Sponsored Content</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10">
+          <!-- Carousel -->
+          <div
+            id="carouselExampleIndicators"
+            class="carousel slide"
+            data-bs-ride="carousel"
+          >
+            <div class="carousel-indicators">
+              <button
+                type="button"
+                data-bs-target="#carouselExampleIndicators"
+                data-bs-slide-to="0"
+                class="active"
+                aria-current="true"
+                aria-label="Slide 1"
+              ></button>
+              <button
+                type="button"
+                data-bs-target="#carouselExampleIndicators"
+                data-bs-slide-to="1"
+                aria-label="Slide 2"
+              ></button>
+              <button
+                type="button"
+                data-bs-target="#carouselExampleIndicators"
+                data-bs-slide-to="2"
+                aria-label="Slide 3"
+              ></button>
+            </div>
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <img src="..." class="d-block w-100" alt="..." />
+              </div>
+              <div class="carousel-item">
+                <img src="..." class="d-block w-100" alt="..." />
+              </div>
+              <div class="carousel-item">
+                <img src="..." class="d-block w-100" alt="..." />
+              </div>
+            </div>
+            <button
+              class="carousel-control-prev"
+              type="button"
+              data-bs-target="#carouselExampleIndicators"
+              data-bs-slide="prev"
+            >
+              <span
+                class="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button
+              class="carousel-control-next"
+              type="button"
+              data-bs-target="#carouselExampleIndicators"
+              data-bs-slide="next"
+            >
+              <span
+                class="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+          <div class="col-1"></div>
+          <!-- End Carrousel-->
+          <div class="container">
+            <div class="row">
+              <div class="col-6">
+                <a href="{% url 'save_listing' listing.id %}">Save to Favorites</a>
+              </div>
+              <div class="col-6">
+                <a href="{% url 'like_listing' listing.id %}">Like this listing</a>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+                <!-- Card -->
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ listing.year }} {{ listing.make }} {{ listing.model }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">VIN:{{ listing.VIN }}</h6>
+                    <p class="card-text">{{ listing.description }}</p>
+                    <p class="card-text"><small class="text-muted">Price: ${{ listing.price }} Dlls.</small></p>
+                    <a class="card-link" href="{% url 'send_message' listing.id listing.seller.id %}">Message seller</a>
+                  </div>
+                  <img src="..." class="card-img-top" alt="...">
+                </div>
+              <!-- End Card-->
+    </div>
+  </article>
 </section>
 {% endblock %}
