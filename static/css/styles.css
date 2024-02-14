@@ -1,57 +1,70 @@
+:root {
+  --primary-color: #4caf50; 
+  --secondary-color: #9932cc;
+  --accent-color: #ff5722;
+  --text-color: #e0e0e0;
+  --background-color-body: #121212;
+  --background-color-card: #212121;
+  --background-color: #24001e;
+  --back-shadow: #b904dd40;
 
+  
+
+  
+}
 
 body {
-  background-color: #121212;
-  color: #e0e0e0;
+  background-color: var(--background-color-body);
+  color: var(--text-color);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Navbar Styles */
 .navbar {
-  background-color: #121212;
-  border-bottom: 1px solid #4caf50;
+  background-color: var(--background-color-body);
+  border-bottom: 1px solid var(--primary-color);
 }
 .navbar-brand {
-  color: #e0e0e0 !important;
+  color: var(--text-color) !important;
   font-size: 25px;
   font-weight: bold;
 }
 .navbar-brand:hover {.a {
-  color: #673ab7;
+  color: var(--secondary-color);
 }
 .a:hover {
-  color: #4caf50;
+  color: var(--primary-color);
 }
 
-  color: #ff5722 !important;
+  color: var(--accent-color) !important;
 
 
 }
 .nav-link {
-  color: #e0e0e0 !important;
+  color: var(--text-color) !important;
 }
 .nav-link.active,
 .nav-link:hover {
-  color: #ff5722 !important;
+  color: var(--accent-color) !important;
 }
 
 /* Hero Layout */
 .hero {
   /* background: url("/static/images/hero-image.jpg") no-repeat center center; */
   background-size: cover;
-  color: #ff5722;
+  color: var(--accent-color);
   text-align: center;
   padding: 100px 20px;
 }
 .hero h1 {
-  color: #ff5722;
+  color: acc;
 }
 .hero p {
-  color: #673ab7;
+  color: var(--secondary-color); 
 }
 .hero a {
-  background-color: #4caf50;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--text-color);
   padding: 10px 20px;
   border-radius: 5px;
   text-decoration: none;
@@ -60,33 +73,33 @@ body {
 
 /* Profile Page */
 .profile-section {
-  border-left: 4px solid #673ab7;
+  border-left: 4px solid var(--secondary-color);
   margin: 20px 0;
   padding: 10px;
 }
 
 /* Forms and Buttons */
 .form {
-  background-color: #121212;
-  width: max-content;
+  background-color: var(--background-color);
+  /* width: max-content; */
   padding: 20px;
   border-radius: 5px;
   margin: 0 auto;
-  box-shadow: 0 0 0 0.2rem rgba(78, 11, 92, 0.25);
+  box-shadow: 0 0 0 0.2rem var(--back-shadow);
   
 }
 .form-control, #id_email, #id_password1, #id_password2,
 #id_username, #id_password {
-  background-color: rgba(78, 11, 92, 0.25);
-  color: #4caf50;
-  border-color: #673ab7;
+  background-color: var(--background-color);
+  color: var(--primary-color);
+  border-color: var(--secondary-color);
   border-radius: 20px;
   padding: 10px;
   margin-bottom: 10px;
   width: 100%;
   box-sizing: border-box;
   transition: border-color 0.5s ease;
-  box-shadow: 0 0 0 0.2rem rgba(185, 4, 221, 0.25);
+  box-shadow: 0 0 0 0.2rem var(--back-shadow);
   resize: vertical;
 
 }
@@ -94,9 +107,9 @@ body {
 /*Cards */
 .card{
   background-color: #212529;
-  color: #dfe6df;
+  color: var(--text-color);
   margin-top: 45px; 
-  box-shadow: 0 0 0 0.4rem rgba(78, 11, 92, 0.25);
+  box-shadow: 0 0 0 0.4rem var(--back-shadow);
   border-radius: 10px;
   padding: 10px;
   margin-bottom: 10px;
@@ -112,12 +125,45 @@ body {
     height: auto; 
     resize: vertical; 
     padding: 10px; 
-    border: 1px solid #4caf50; 
-    background-color: rgba(78, 11, 92, 0.25);
-    color: #969494; /* Text color */
-    box-shadow: 0 0 0 0.2rem rgba(185, 4, 221, 0.25);
+    border: 1px solid var(--primary-color); 
+    background-color: var(--background-color);
+    color: var(--text-color); 
+    box-shadow: 0 0 0 0.2rem var(--back-shadow);
   }
 
   .unread {
-    color: #1cf108;
+    color: var(--primary-color);
+}
+.scrollable-box {
+  overflow-y: auto; /* Adds vertical scrollbar if needed */
+  max-height: 200px; /* Maximum height before scrolling */
+  padding: 15px;
+  border: 1px solid var(--secondary-color); 
+  border-radius: 5px; 
+  background-color: var(--background-color); 
+  color: var(--text-color)
+}
+.replies {
+  margin-left: 10px;
+  width: 50%;
+}
+/* 
+@media screen and (min-width: 768px) {
+  .replies, .form-container {
+    margin-left: 10px;
+    width: 50%;
+  } 
+
+}
+
+@media screen and (max-width: 768px) {
+  .hero {
+    padding: 50px 20px;
+  }
+
+  .replies, .reply-form .textarea .form-container {
+    margin-left: 10px;
+    width: 100%;
+  }
+  
 }

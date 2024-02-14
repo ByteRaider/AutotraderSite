@@ -1,5 +1,5 @@
 {% extends "listings/base.html" %} {% block content %}
-<h2>Conversation with {{ main_message.receiver.username }}</h2>
+<h2>Original Question from {{ main_message.receiver.username }}</h2>
 <div class="row">
   <div class="col-4">
     <p>{{ main_message.created_at }} {{ main_message.sender.username }}:</p>
@@ -8,34 +8,37 @@
     <p>{{ main_message.content}}</p>
   </div>
 </div>
-<div class="replies max-width">
-  {% for reply in replies %}
-  <div class="row">
-    <div class="col-4">
-      <p class="card-subtitle">
-        {{ reply.created_at }} {{ reply.sender.username }}:
+
+<div class="container-sm">
+  <div class="container scrollable-box">
+    {% for reply in replies %}
+    <p class="card-text muted">
+      {{ reply.created_at }} {{ reply.sender.username }}:
+    </p>
+    <div class="reply {% if not reply.is_read %}unread{% endif %}">
+      <p>
+        <strong>{{reply.content }} </strong>
       </p>
-    </div></p>
-    <div class="col-8">
-      <div class="reply {% if not reply.is_read %}unread{% endif %}">
-        <p>
-          <strong>{{reply.content }} </strong>
-        </p>
-      </div>
     </div>
+
+    {% empty %}
+    <p>No replies yet.</p>
+    {% endfor %}
   </div>
-  {% empty %}
-  <p>No replies yet.</p>
-  {% endfor %}
 </div>
+<div class="container-md">
+  <div class="reply-form">
+    <form method="post" action="{% url 'reply_to_message' main_message.id %}">
+      {% csrf_token %}
+      <textarea
+        class="form-control"
+        name="content"
+        placeholder="Write your reply here..."
+      ></textarea>
 
-
-<div class="reply-form">
-  <form method="post" action="{% url 'reply_to_message' main_message.id %}">
-    {% csrf_token %}
-    <textarea name="content" placeholder="Write your reply here..."></textarea>
-    <button type="submit">Reply</button>
-  </form>
+      <button class="form-control" type="submit">Reply</button>
+    </form>
+  </div>
 </div>
 
 <script>

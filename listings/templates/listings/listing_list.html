@@ -24,8 +24,9 @@
           <div class="card-body">
             <h5 class="card-title">{{ listing.make }} {{ listing.model }}</h5>
             <p class="card-text">{{ listing.description }}</p>
-            <a href="{% url 'listing_detail' listing.id %}" class="btn btn-primary">View Details</a>
-            <a href="{% url 'like_listing' listing.id %}">Like</a>
+            <div class="container-fluid"></div>
+            <a href="{% url 'listing_detail' listing.id %}" class="btn btn-outline-success float-start">View Details</a>
+            <a href="{% url 'like_listing' listing.id %}" class="btn btn-outline-info float-end">Like</a>
           </div>
         </div>
       </div>
