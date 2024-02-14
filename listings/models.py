@@ -38,8 +38,8 @@ class SavedListing(models.Model):
     
 # LIKES
 class ListingLike(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='liked_listings', on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, related_name='likes', on_delete=models.CASCADE)
     liked_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

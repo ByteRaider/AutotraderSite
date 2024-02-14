@@ -49,7 +49,9 @@ def listing_list(request):
 
 def listing_detail(request, id):
     listing = get_object_or_404(Listing, pk=id)
-    return render(request, 'listings/listing_detail.html', {'listing': listing })
+    likes_count = listing.likes.count()
+    return render(request, 'listings/listing_detail.html', {'listing': listing,
+                                                            'likes_count': likes_count})
 
 def add_listing(request):
     if request.method == 'POST':
@@ -85,7 +87,6 @@ def view_saved_listings(request):
     saved_listings = SavedListing.objects.select_related('listing').filter(user=request.user)
     return render(request, 'listings/saved_listings.html', {'saved_listings': saved_listings})
     
-
 def remove_saved_listing(request, listing_id):
     SavedListing.objects.filter(user=request.user, listing_id=listing_id).delete()
     messages.success(request, 'Listing removed from saved listings.')
@@ -198,6 +199,7 @@ def delete_message(request, message_id):
         return redirect('view_message_thread', message_id=message_id)
 
 # <!  LIKEs -->
+
 def like_listing(request, listing_id):
     listing, created = ListingLike.objects.get_or_create(user=request.user, listing_id=listing_id)
     if created:

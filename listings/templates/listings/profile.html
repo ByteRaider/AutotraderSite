@@ -1,19 +1,22 @@
-{% extends "listings/base.html" %}
-{% block title %}{% endblock %}
-{% block content %}
+{% extends "listings/base.html" %} {% block title %}My Profile - {{
+user.username }}{% endblock %} {% block content %}
 <section>
-    <article>
-        <header>
-        </header>
-        <p>Welcome,{% if user.is_authenticated %} {{ user.username }}
-            {% else %} estranger {% endif %}!</p>
-    </article>
+  <article>
+    <header></header>
+    <p>
+      Welcome,{% if user.is_authenticated %} {{ user.username }} {% else %}
+      estranger {% endif %}!
+    </p>
+  </article>
 
-    <article>
-        <header>
-        </header>
-
-    </article>
-
+  <article class="justify-content-end">
+    <header></header>
+    <form action="{% url 'logout' %}" method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-sm btn-outline-warning">
+        Logout
+      </button>
+    </form>
+  </article>
 </section>
 {%endblock%}
