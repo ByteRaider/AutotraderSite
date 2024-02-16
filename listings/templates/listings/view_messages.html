@@ -1,13 +1,35 @@
 {% extends "listings/base.html" %} {% block articleTitle %} View Message Threads
 {% endblock %} {% block content %}
 
+
+<!-- Pagination Links -->
+<div class="pagination">
+  <span class="step-links">
+    {% if page_obj.has_previous %}
+    
+    <a href="?page=1">&laquo; first</a>
+    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+    {% endif %}
+
+    <span class="current">
+      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+    </span>
+
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">next</a>
+    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+    {% endif %}
+  </span>
+</div>
+
+<!-- Message Threads -->
 <div class="">
   <div class="card-group">
     <!-- For each message thread -->
     {% for thread in page_obj %}
     <div class="col">
-      <div class="card mb-2" style="width: 18rem">
-        <img src="..." class="card-img-top" alt="..." />
+      <div class="card mb-2">
+        <img src="#" class="card-img-top" alt="Image of listing for {{thread.listing.year}} {{thread.listing.make}} {{thread.listing.model}} car" />
         <div class="card-body">
           <h5 class="card-title">
             <a
@@ -36,22 +58,4 @@
   </div>
 </div>
 
-<!-- Pagination Links -->
-<div class="pagination">
-  <span class="step-links">
-    {% if page_obj.has_previous %}
-    <a href="?page=1">&laquo; first</a>
-    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-    {% endif %}
-
-    <span class="current">
-      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-    </span>
-
-    {% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}">next</a>
-    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-    {% endif %}
-  </span>
-</div>
 {% endblock %}

@@ -9,7 +9,7 @@
       <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
         <a class="navbar-brand" href="/">Hidden brand</a>
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          {% if user.is_authenticated %}
+        {% if user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'add_listing' %}">Sell a Car</a>
           </li>
@@ -22,11 +22,11 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'profile' %}">My Profile</a>
           </li>
-          {% else %}
+        {% else %}
           <li class="nav-item ">
             <a class="nav-link" href="{% url 'login' %}">Login</a>
           </li>
-          {% endif %}
+        {% endif %}
         </ul>
       </div>
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">

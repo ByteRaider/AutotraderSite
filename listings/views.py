@@ -2,11 +2,12 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.core.exceptions import ValidationError
+
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseForbidden, JsonResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
-from django.utils.timezone import localtime
+from django.utils.timezone import localtime, make_naive
 from django.urls import reverse
 from .models import Profile, Listing, ListingImage, Message, SavedListing, ListingLike, Thread
 from .forms import UserRegisterForm, ListingForm, ListingImageForm, MessageForm, MessageReplyForm
@@ -187,6 +188,29 @@ def view_message_thread(request, message_id):
         'main_message': main_message,
         'replies': replies,
     })
+
+def fetch_new_replies(request, message_id):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        last_update = request.GET.get('last_update')
+        if last_update:
+            # Convert last_update to datetime object
+            last_update = datetime.strptime(last_update, '%Y-%m-%d %H:%M:%S')
+
+        new_replies = Message.objects.filter(
+            parent_id=message_id,
+            created_at__gt=make_naive(last_update)
+        ).order_by('created_at')
+
+        replies_data = [{
+            'id': reply.id,
+            'content': reply.content,
+            'sender': reply.sender.username,
+            'created_at': make_naive(reply.created_at).strftime('%Y-%m-%d %H:%M:%S')
+        } for reply in new_replies]
+
+        return JsonResponse({'replies': replies_data})
+    
+    return HttpResponseBadRequest('Invalid request')
 
 def delete_message(request, message_id):
     message = get_object_or_404(Message, id=message_id)

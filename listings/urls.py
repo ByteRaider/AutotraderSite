@@ -25,6 +25,7 @@ urlpatterns = [
     path('messages/reply/<int:message_id>/', views.reply_to_message, name='reply_to_message'),
     path('messages/delete/<int:message_id>/', views.delete_message, name='delete_message'),
     path('messages/thread/<int:message_id>/', views.view_message_thread, name='view_message_thread'),
+    path('messages/fetch_new_replies/<int:message_id>/', views.fetch_new_replies, name='fetch_new_replies'),
 ]
 
 
