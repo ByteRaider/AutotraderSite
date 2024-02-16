@@ -8,42 +8,41 @@
     <p>{{ main_message.content}}</p>
   </div>
 </div>
-
-<div class="container-sm">
-  <div class="container scrollable-box">
-    {% for reply in replies %}
-    <p class="card-text muted">
-      {{ reply.created_at }} {{ reply.sender.username }}:
+<div class="container scrollable-box">
+  {% for reply in replies %}
+  <p class="card-text muted">
+    {{ reply.created_at }} {{ reply.sender.username }}:
+  </p>
+  <div class="reply {% if not reply.is_read %}unread{% endif %}">
+    <p>
+      <strong>{{reply.content }} </strong>
     </p>
-    <div class="reply {% if not reply.is_read %}unread{% endif %}">
-      <p>
-        <strong>{{reply.content }} </strong>
-      </p>
-    </div>
-
-    {% empty %}
-    <p>No replies yet.</p>
-    {% endfor %}
   </div>
+
+  {% empty %}
+  <p>No replies yet.</p>
+  {% endfor %}
 </div>
-<div class="container-md">
-  <div class="reply-form">
-    <form method="post" action="{% url 'reply_to_message' main_message.id %}">
-      {% csrf_token %}
-      <textarea
-        class="form-control"
-        name="content"
-        placeholder="Write your reply here..."
-      ></textarea>
+<div class="container">
+  <form
+    class="reply-form"
+    method="post"
+    action="{% url 'reply_to_message' main_message.id %}"
+  >
+    {% csrf_token %}
+    <textarea
+      class="form-control"
+      name="content"
+      placeholder="Write your reply here..."
+    ></textarea>
 
-      <button class="form-control" type="submit">Reply</button>
-    </form>
-  </div>
+    <button class="form-control" type="submit">Reply</button>
+  </form>
 </div>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const replyForm = document.querySelector(".reply-form form");
+    const replyForm = document.querySelector(".reply-form");
     const notificationsDiv = document.createElement("div"); // Container for notifications
     notificationsDiv.className = "notifications";
     document.body.appendChild(notificationsDiv); // Append the container to the body or another suitable container
@@ -74,7 +73,7 @@
             displayNotification("Message failed to send.", data.error);
           } else {
             // Append the new reply to the conversation thread
-            const repliesDiv = document.querySelector(".replies");
+            const repliesDiv = document.querySelector(".scrollable-box");
             const replyElement = document.createElement("p");
             replyElement.innerHTML = `<strong>${data.sender}</strong>: ${data.content} <small>${data.created_at}</small>`;
             repliesDiv.appendChild(replyElement);
